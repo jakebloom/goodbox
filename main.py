@@ -1,3 +1,4 @@
+import sys
 import ujson
 import time
 import network
@@ -5,8 +6,9 @@ from machine import Pin
 from urequests import get
 
 WIFI_LED = Pin(2, Pin.OUT)
-MONEY_LED = None
-SURF_LED = None
+MONEY_LED = Pin(12, Pin.OUT)
+SURF_LED = Pin(14, Pin.OUT)
+MAX_SURF_HEIGHT = 1.3 # in metres for some reason
 ENVIRONMENT = {}
 
 def do_connect():
@@ -37,7 +39,9 @@ def fetch_stock():
   return False
 
 def fetch_surf():
-  return False
+  res = get('https://us-central1-goodbox-287320.cloudfunctions.net/waves').json()
+  height = res["values"][0]["value"]
+  return height < MAX_SURF_HEIGHT
 
 def main():
   load_env()
@@ -51,16 +55,20 @@ def main():
     surfIsGood = fetch_surf()
 
     if moneyIsGood:
-      pass # set money led
+      print("money good")
+      MONEY_LED.on()
     else:
-      pass # turn off money led
+      print("money bad")
+      MONEY_LED.off()
 
     if surfIsGood:
-      pass # set surf led
+      print("surf good")
+      SURF_LED.on()
     else:
-      pass # turn off surf led
+      print("surf bad")
+      SURF_LED.off()
 
-    time.sleep(60 * 10) # update again in 10 mins
+    time.sleep(10 * 60)
 
 
 if __name__ == '__main__':

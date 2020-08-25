@@ -6,7 +6,7 @@ from machine import Pin
 from urequests import get
 
 WIFI_LED = Pin(2, Pin.OUT)
-MONEY_LED = Pin(12, Pin.OUT)
+MONEY_LED = Pin(13, Pin.OUT)
 SURF_LED = Pin(14, Pin.OUT)
 MAX_SURF_HEIGHT = 1.3 # in metres for some reason
 ENVIRONMENT = {}
